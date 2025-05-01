@@ -3,6 +3,8 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { Menu } from 'src/db/models/menu.model';
 import { MenuRepoService } from './repositories/menu-repo/menu-repo.service';
 import { Sequelize } from 'sequelize-typescript';
+import { UserRepoService } from './repositories/user-repo/user-repo.service';
+import { User } from './models/user.model';
 
 @Module({
     imports: [
@@ -18,15 +20,18 @@ import { Sequelize } from 'sequelize-typescript';
           synchronize: true,
         }),
       }),
-        SequelizeModule.forFeature([Menu])
+        SequelizeModule.forFeature([Menu, User])
       ],
-    providers: [MenuRepoService],
-    exports: [MenuRepoService]
+    providers: [MenuRepoService, UserRepoService],
+    exports: [MenuRepoService, UserRepoService],
+    controllers: []
 })
 export class DbModule {
   constructor(  private readonly sequelize: Sequelize){}
   async onModuleInit() {
     this.sequelize.sync();
+    console.log('DB sync');
+    
   }
   /* async onModuleInit() {
     await Menu.sync();  // Syncs the User model with DB
